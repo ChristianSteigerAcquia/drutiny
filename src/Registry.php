@@ -53,32 +53,31 @@ class Registry {
   /**
    *
    */
-  public static function checks() {
+  public static function policies() {
     static $registry;
 
     if ($registry) {
       return $registry;
     }
-    
-    $dirs = new Finder();
-    $dirs->directories()
-           ->in('.')
-           ->name('Check');
+
+    // $dirs = new Finder();
+    // $dirs->directories()
+    //        ->in('.')
+    //        ->name('Policy');
 
     $finder = new Finder();
-    $finder->files();
+    $finder->files()->in('.');
 
-    foreach ($dirs as $dir) {
-      $finder->in($dir->getRealPath());
-    }
+    // foreach ($dirs as $dir) {
+    //   $finder->in($dir->getRealPath());
+    // }
 
-    $finder->name('*.yml');
+    $finder->name('*.policy.yml');
 
     $registry = [];
     foreach ($finder as $file) {
-      $check = Yaml::parse(file_get_contents($file->getRealPath()));
-      $check['name'] = str_replace('.yml', '', $file->getFilename());
-      $registry[$check['name']] = new CheckInformation($check);
+      $policy = Yaml::parse(file_get_contents($file->getRealPath()));
+      $registry[$policy['name']] = new Policy($policy);
     }
     return $registry;
   }
@@ -94,17 +93,11 @@ class Registry {
    *
    */
   public static function profiles() {
-    $dirs = new Finder();
-    $dirs->directories()
-           ->in('.')
-           ->name('profiles');
+
 
     $finder = new Finder();
     $finder->files();
-
-    foreach ($dirs as $dir) {
-      $finder->in($dir->getRealPath());
-    }
+    $finder->in('.');
 
     $finder->name('*.profile.yml');
 

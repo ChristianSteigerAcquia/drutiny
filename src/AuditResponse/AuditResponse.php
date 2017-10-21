@@ -2,7 +2,7 @@
 
 namespace Drutiny\AuditResponse;
 
-use Drutiny\CheckInformation;
+use Drutiny\Policy;
 
 /**
  * Class AuditResponse.
@@ -30,7 +30,7 @@ class AuditResponse {
    * @param mixed $state
    *   A bool|int|null indicating the outcome of a Drutiny\Check\Check.
    */
-  public function __construct(CheckInformation $info) {
+  public function __construct(Policy $info) {
     $this->info = $info;
   }
 
@@ -52,6 +52,16 @@ class AuditResponse {
     }
     $this->state = $state;
     $this->tokens = $tokens;
+  }
+
+  /**
+   * Get the name.
+   *
+   * @return string
+   *   The policy name.
+   */
+  public function getName() {
+    return $this->info->get('name', $this->tokens);
   }
 
   /**
